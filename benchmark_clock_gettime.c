@@ -6,7 +6,7 @@
 
 #define CLOCK_ID CLOCK_MONOTONIC_RAW
 #define ONE_SEC 1000000000.0
-#define SAMPLE_TIME 1000
+#define SAMPLE_TIME 1
 #define M_PI acos(-1.0)
 
 double compute_i(double time_pi[]);
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
 			  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
     }
     printf("%lf ", compute_i(compute_time));
-    printf("%lf ", compute_error(compute_pi_baseline(N)));
+    printf("%.15lf ", compute_error(compute_pi_baseline(N)));
 
     // OpenMP with 2 threads
     for(i = 0; i < SAMPLE_TIME;i++) {
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
                           (end.tv_nsec - start.tv_nsec)/ONE_SEC;
     }
     printf("%lf ", compute_i(compute_time));
-    printf("%lf ", compute_error(compute_pi_openmp(N, 2)));
+    printf("%.15lf ", compute_error(compute_pi_openmp(N, 2)));
 
     // OpenMP with 4 threads
     for(i = 0; i < SAMPLE_TIME;i++) {
@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
                           (end.tv_nsec - start.tv_nsec)/ONE_SEC;
     }
     printf("%lf ", compute_i(compute_time));
-    printf("%lf \n", compute_error(compute_pi_openmp(N, 4)));
+    printf("%.15lf \n", compute_error(compute_pi_openmp(N, 4)));
 
     //printf("%lf \n", compute_i(compute_time));
 
