@@ -14,69 +14,74 @@ double compute_error(double counted_pi);
 
 int main(int argc, char const *argv[])
 {
-    struct timespec start = {0, 0};
-    struct timespec end = {0, 0};
+	struct timespec start = {0, 0};
+	struct timespec end = {0, 0};
 
-    if (argc < 2) return -1;
+	if (argc < 2) return -1;
 
-    int N = atoi(argv[1]);
-    int i;
+	int N = atoi(argv[1]);
+	int i;
 
-    double compute_time[SAMPLE_TIME];
+	double compute_time[SAMPLE_TIME];
 
-    // Baseline
-    for(i = 0; i < SAMPLE_TIME;i++) {
-        clock_gettime(CLOCK_ID, &start);
-        compute_pi_baseline(N);
-        clock_gettime(CLOCK_ID, &end);
-	compute_time[i] = (double) (end.tv_sec - start.tv_sec) + 
-			  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
+	// Baseline
+	for(i = 0; i < SAMPLE_TIME;i++) {
+		clock_gettime(CLOCK_ID, &start);
+		compute_pi_baseline(N);
+		clock_gettime(CLOCK_ID, &end);
+		compute_time[i] = (double) (end.tv_sec - start.tv_sec) + 
+						  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
     }
-    printf("%lf ", compute_i(compute_time));
-    printf("%.15lf ", compute_error(compute_pi_baseline(N)));
+	printf("%lf ", compute_i(compute_time));
+	printf("%.16lf ", compute_error(compute_pi_baseline(N)));
 
-    // OpenMP with 2 threads
-    for(i = 0; i < SAMPLE_TIME;i++) {
-        clock_gettime(CLOCK_ID, &start);
-        compute_pi_openmp(N, 2);
-        clock_gettime(CLOCK_ID, &end);
-        compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
-                          (end.tv_nsec - start.tv_nsec)/ONE_SEC;
-    }
-    printf("%lf ", compute_i(compute_time));
-    printf("%.15lf ", compute_error(compute_pi_openmp(N, 2)));
+	// OpenMP with 2 threads
+	for(i = 0; i < SAMPLE_TIME;i++) {
+		clock_gettime(CLOCK_ID, &start);
+		compute_pi_openmp(N, 2);
+		clock_gettime(CLOCK_ID, &end);
+		compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
+						  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
+	}
+	printf("%lf ", compute_i(compute_time));
+	printf("%.16lf ", compute_error(compute_pi_openmp(N, 2)));
 
     // OpenMP with 4 threads
-    for(i = 0; i < SAMPLE_TIME;i++) {
-        clock_gettime(CLOCK_ID, &start);
-        compute_pi_openmp(N, 4);
-        clock_gettime(CLOCK_ID, &end);
-        compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
-                          (end.tv_nsec - start.tv_nsec)/ONE_SEC;
-    }
-    printf("%lf ", compute_i(compute_time));
-    printf("%.15lf \n", compute_error(compute_pi_openmp(N, 4)));
+	for(i = 0; i < SAMPLE_TIME;i++) {
+		clock_gettime(CLOCK_ID, &start);
+		compute_pi_openmp(N, 4);
+		clock_gettime(CLOCK_ID, &end);
+		compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
+						  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
+	}
+	printf("%lf ", compute_i(compute_time));
+	printf("%.16lf ", compute_error(compute_pi_openmp(N, 4)));
 
-    //printf("%lf \n", compute_i(compute_time));
+#if defined(MAVX)
 
-    // AVX SIMD
-/*    clock_gettime(CLOCK_ID, &start);
-    for(i = 0; i < loop; i++) {
-        compute_pi_avx(N);
-    }
-    clock_gettime(CLOCK_ID, &end);
-    printf("%lf,", (double) (end.tv_sec - start.tv_sec) +
-           (end.tv_nsec - start.tv_nsec)/ONE_SEC);
-
+	// AVX SIMD
+	for(i = 0; i < SAMPLE_TIME;i++) {
+		clock_gettime(CLOCK_ID, &start);
+		compute_pi_avx(N);
+		clock_gettime(CLOCK_ID, &end);
+		compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
+						  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
+	}
+	printf("%lf ", compute_i(compute_time));
+	printf("%.16lf ", compute_error(compute_pi_avx(N)));
 
     // AVX SIMD + Loop unrolling
-    clock_gettime(CLOCK_ID, &start);
-    for(i = 0; i < loop; i++) {
-        compute_pi_avx_unroll(N);
-    }
-    clock_gettime(CLOCK_ID, &end);
-    printf("%lf\n", (double) (end.tv_sec - start.tv_sec) +
-           (end.tv_nsec - start.tv_nsec)/ONE_SEC);*/
+	for(i = 0; i < SAMPLE_TIME;i++) {
+		clock_gettime(CLOCK_ID, &start);
+		compute_pi_avx_unroll(N);
+		clock_gettime(CLOCK_ID, &end);
+		compute_time[i] = (double) (end.tv_sec - start.tv_sec) +
+						  (end.tv_nsec - start.tv_nsec)/ONE_SEC;
+	}
+	printf("%lf ", compute_i(compute_time));
+	printf("%.16lf \n", compute_error(compute_pi_avx_unroll(N)));
+
+#endif
 
     return 0;
 }
