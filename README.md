@@ -4,6 +4,28 @@ Authored by Lee Chao Yuan `<charles620016@gmail.com>`
 
 ![](https://raw.githubusercontent.com/charles620016/embedded-fall2015/master/hw1-computePi/screenshot/integral.png)
 
+## 開發共筆
+* https://hackmd.io/KYQwjARgZgTArAZgLQgJwAYpICyoMYAmSAHJiEggGzzqQEIDsqYQA===?view#實作
+
+## Usage
+
+### if your computer not support AVX SIMD
+`make gencsv`
+
+`make plot`
+
+`eog time.png`
+
+`eog error.png`
+### if your computer support AVX SIMD
+`make avx-gencsv`
+
+`make avx-plot`
+
+`eog time_avx.png`
+
+`eog error.png`
+
 ## 相關連結
 
 * [開發紀錄與效能分析](https://charles620016.hackpad.com/Charles-Week-1-kBMD0GhbC7d)
